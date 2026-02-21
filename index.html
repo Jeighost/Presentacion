@@ -15,26 +15,24 @@
         body {
             font-family: 'Rajdhani', sans-serif;
             background: #000;
-            overflow: hidden;
-            position: fixed;
+            overflow-x: hidden;
+            overflow-y: auto;
             width: 100%;
-            height: 100vh;
-            height: 100dvh;
-            top: 0;
-            left: 0;
+            min-height: 100vh;
         }
 
         #particles-canvas {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
+            pointer-events: none;
         }
 
         .grid-background {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -45,6 +43,7 @@
             background-size: 50px 50px;
             animation: gridMove 20s linear infinite;
             z-index: 1;
+            pointer-events: none;
         }
 
         @keyframes gridMove {
@@ -53,12 +52,13 @@
         }
 
         .light-beam {
-            position: absolute;
+            position: fixed;
             width: 2px;
             height: 200px;
             background: linear-gradient(to bottom, transparent, rgba(30, 144, 255, 0.8), transparent);
             animation: beamMove 3s ease-in-out infinite;
             z-index: 1;
+            pointer-events: none;
         }
 
         .light-beam:nth-child(1) { left: 20%; animation-delay: 0s; }
@@ -71,31 +71,25 @@
         }
 
         .container {
-            position: fixed;
-            top: 0;
-            left: 0;
+            position: relative;
             z-index: 10;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
+            width: 100%;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            padding: 40px 0;
             perspective: 1500px;
-            overflow: hidden;
         }
 
         .card {
             position: relative;
             width: 92%;
             max-width: 420px;
-            max-height: 92vh;
-            max-height: 92dvh;
-            overflow-y: auto;
-            overflow-x: hidden;
+            margin-bottom: 30px;
             padding: 28px 25px;
             border-radius: 30px;
-            background: rgba(10, 15, 30, 0.7);
+            background: rgba(10, 15, 30, 0.85);
             backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid rgba(30, 144, 255, 0.3);
             box-shadow:
@@ -107,12 +101,6 @@
             transform-style: preserve-3d;
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             animation: cardEntrance 1.5s ease-out;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        
-        .card::-webkit-scrollbar {
-            display: none;
         }
 
         @keyframes cardEntrance {
@@ -237,7 +225,7 @@
 
         .description {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 15px;
             line-height: 1.4;
         }
@@ -387,6 +375,169 @@
             letter-spacing: 0.5px;
         }
 
+        /* Sección de información */
+        .info-section {
+            position: relative;
+            width: 92%;
+            max-width: 420px;
+            margin-bottom: 30px;
+            padding: 30px 25px;
+            border-radius: 30px;
+            background: rgba(10, 15, 30, 0.85);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            box-shadow:
+                0 0 60px rgba(30, 144, 255, 0.4),
+                0 30px 90px rgba(0, 0, 0, 0.9);
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e90ff 0%, #00ffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-content {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .info-content p {
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .info-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: rgba(30, 144, 255, 0.1);
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            color: #00d4ff;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Sección de mapa */
+        .map-section {
+            position: relative;
+            width: 92%;
+            max-width: 420px;
+            margin-bottom: 40px;
+            border-radius: 30px;
+            background: rgba(10, 15, 30, 0.85);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            box-shadow:
+                0 0 60px rgba(30, 144, 255, 0.4),
+                0 30px 90px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out 0.7s both;
+        }
+
+        .map-header {
+            padding: 25px 25px 15px;
+            text-align: center;
+        }
+
+        .map-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e90ff 0%, #00ffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .map-address {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            border-top: 1px solid rgba(30, 144, 255, 0.3);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(0%) invert(90%) hue-rotate(180deg);
+        }
+
+        .map-overlay-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            background: rgba(30, 144, 255, 0.9);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.5);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .map-overlay-btn:hover {
+            background: rgba(0, 255, 255, 0.9);
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -401,8 +552,7 @@
         .button:nth-child(7) { animation: fadeIn 0.5s ease 0.8s both; }
 
         @media (max-width: 480px) {
-            .card { 
-                padding: 25px 20px;
+            .card, .info-section, .map-section { 
                 width: 95%;
             }
             h1 { font-size: 20px; }
@@ -412,21 +562,8 @@
                 font-size: 12px;
             }
             .button-icon { width: 20px; height: 20px; }
-        }
-        
-        @media (max-height: 700px) {
-            .card { padding: 20px 18px; }
-            .logo-container { 
-                width: 90px; 
-                height: 90px;
-                margin-bottom: 12px;
-            }
-            h1 { font-size: 18px; }
-            .tagline { font-size: 11px; }
-            .description { font-size: 11px; margin-bottom: 12px; }
-            .buttons-container { gap: 8px; margin-top: 12px; }
-            .button { padding: 11px 14px; }
-            .footer { margin-top: 12px; padding-top: 10px; font-size: 9px; }
+            .info-section h2, .map-header h2 { font-size: 20px; }
+            .info-content { font-size: 13px; }
         }
 
         .qr-modal {
@@ -526,10 +663,9 @@
     <div class="light-beam"></div>
 
     <div class="container">
+        <!-- Tarjeta principal -->
         <div class="card" id="card">
             <!-- ⚠️ ACTUALIZAR AQUÍ: Reemplaza el src con la ruta de tu logo real -->
-            <!-- Ejemplo: <img src="logo.png" class="logo" alt="Logo Emisora Ebenezer Stereo"> -->
-            <!-- O sube tu imagen y usa: <img src="ruta/a/tu/logo.jpg" class="logo" alt="Logo Emisora Ebenezer Stereo"> -->
             <div class="logo-container">
                 <img src="logo.png" class="logo" alt="Logo Emisora Ebenezer Stereo">
             </div>
@@ -595,8 +731,52 @@
                 © 2026 • Emisora Ebenezer Stereo
             </div>
         </div>
+
+        <!-- Sección de información -->
+        <div class="info-section">
+            <h2>Emisoras Ganadoras</h2>
+            <div class="info-content">
+                <p>Ebenezer Stereo se enorgullece de ser una de las <span class="highlight">150 emisoras ganadoras</span> de la convocatoria <span class="highlight">Territorios al Aire 2025</span> del Ministerio de las TIC's.</p>
+                
+                <p>Unidos le damos sonido a las historias que nos conectan. Llevamos el poder de la palabra a través de la frecuencia <span class="highlight">88.2 FM</span> y nuestra plataforma digital.</p>
+
+                <div class="info-stats">
+                    <div class="stat-box">
+                        <span class="stat-number">88.2</span>
+                        <span class="stat-label">FM</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">En vivo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de mapa -->
+        <div class="map-section">
+            <div class="map-header">
+                <h2>Nuestra Ubicación</h2>
+                <p class="map-address">
+                    Valledupar, Colombia<br>
+                    10°23'12.5"N 73°10'14.2"W
+                </p>
+            </div>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3935.7267898765436!2d-73.17281908478614!3d10.386805692615698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDIzJzEyLjUiTiA3M8KwMTAnMTQuMiJX!5e0!3m2!1ses!2sco!4v1234567890123!5m2!1ses!2sco"
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <a href="https://maps.google.com/?q=10.386806,-73.170611" class="map-overlay-btn">
+                    Abrir en Google Maps
+                </a>
+            </div>
+        </div>
     </div>
 
+    <!-- Modal QR -->
     <div class="qr-modal" id="qr-modal">
         <div class="qr-content">
             <div class="close-qr" id="close-qr">×</div>
