@@ -29,6 +29,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
+            will-change: transform; /* Aceleración GPU */
         }
 
         .grid-background {
@@ -44,6 +45,7 @@
             animation: gridMove 20s linear infinite;
             z-index: 1;
             pointer-events: none;
+            will-change: transform; /* Aceleración GPU */
         }
 
         @keyframes gridMove {
@@ -90,17 +92,33 @@
             padding: 28px 25px;
             border-radius: 30px;
             background: rgba(10, 15, 30, 0.85);
-            backdrop-filter: blur(25px) saturate(180%);
+            /* backdrop-filter eliminado, se usa pseudo-elemento para blur más eficiente */
             border: 1px solid rgba(30, 144, 255, 0.3);
             box-shadow:
                 0 0 60px rgba(30, 144, 255, 0.4),
-                0 30px 90px rgba(0, 0, 0, 0.9),
-                inset 0 0 80px rgba(30, 144, 255, 0.05);
+                0 30px 90px rgba(0, 0, 0, 0.9);
             text-align: center;
             transform: rotateX(2deg) rotateY(0deg);
             transform-style: preserve-3d;
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             animation: cardEntrance 1.5s ease-out;
+            will-change: transform, box-shadow; /* Preparar para animaciones */
+        }
+
+        /* Pseudo-elemento para el blur (más eficiente que backdrop-filter) */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 15, 30, 0.85);
+            filter: blur(10px);
+            border-radius: 30px;
+            z-index: -1;
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            box-shadow: inset 0 0 80px rgba(30, 144, 255, 0.05);
         }
 
         @keyframes cardEntrance {
@@ -118,8 +136,7 @@
             transform: rotateX(0deg) rotateY(0deg) scale(1.01);
             box-shadow:
                 0 0 80px rgba(30, 144, 255, 0.5),
-                0 35px 100px rgba(0, 0, 0, 0.95),
-                inset 0 0 100px rgba(30, 144, 255, 0.1);
+                0 35px 100px rgba(0, 0, 0, 0.95);
         }
 
         .card::before {
@@ -136,7 +153,7 @@
                 #0066ff);
             background-size: 300% 300%;
             border-radius: 30px;
-            z-index: -1;
+            z-index: -2;
             animation: borderGlow 4s ease infinite;
             opacity: 0.6;
             filter: blur(8px);
@@ -154,6 +171,7 @@
             margin: 0 auto 30px;
             transform-style: preserve-3d;
             animation: logoFloat 4s ease-in-out infinite;
+            will-change: transform; /* Aceleración GPU */
         }
 
         @keyframes logoFloat {
@@ -243,16 +261,16 @@
             content: "";
             position: absolute;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: translateX(-100%);
             animation: shimmer 2s infinite;
         }
 
         @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            100% { transform: translateX(100%); }
         }
 
         .buttons-container {
@@ -396,7 +414,6 @@
             padding: 30px 25px;
             border-radius: 30px;
             background: rgba(10, 15, 30, 0.85);
-            backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid rgba(30, 144, 255, 0.3);
             box-shadow:
                 0 0 60px rgba(30, 144, 255, 0.4),
@@ -482,7 +499,6 @@
             margin-bottom: 40px;
             border-radius: 30px;
             background: rgba(10, 15, 30, 0.85);
-            backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid rgba(30, 144, 255, 0.3);
             box-shadow:
                 0 0 60px rgba(30, 144, 255, 0.4),
@@ -576,6 +592,44 @@
             .button-icon { width: 20px; height: 20px; }
             .info-section h2, .map-header h2 { font-size: 20px; }
             .info-content { font-size: 13px; }
+        }
+
+              /* OPTIMIZACIONES ESPECÍFICAS PARA MÓVILES (RENDIMIENTO) */
+        @media (max-width: 768px) {
+            .grid-background {
+                animation: gridMoveSimple 15s linear infinite;
+                transform: none;
+                background-size: 30px 30px;
+            }
+            @keyframes gridMoveSimple {
+                0% { background-position: 0 0; }
+                100% { background-position: 0 50px; }
+            }
+            .light-beam {
+                animation: beamMove 4s steps(10) infinite; /* Menos interpolaciones */
+                opacity: 0.6; /* Un poco más tenue */
+            }
+            .card {
+                transform: rotateX(0deg) !important; /* Desactiva la inclinación 3D en móvil */
+                transition: box-shadow 0.3s ease; /* Simplifica transición */
+            }
+            .card:hover {
+                transform: scale(1.01) !important;
+            }
+            .card::after {
+                filter: blur(8px); /* Reduce el blur */
+            }
+            .card::before {
+                animation: none; /* Desactiva el borde animado */
+                opacity: 0.3;
+            }
+            .logo-container {
+                animation: logoFloat 3s ease-in-out infinite; /* Acelera un poco la animación */
+            }
+            .divider::after {
+                animation: shimmer 1.5s infinite; /* Más rápida, menos tiempo de render */
+            }
+            /* Reduce la cantidad de partículas en móvil (se controla en JS) */
         }
 
         .qr-modal {
@@ -824,8 +878,11 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
+        // Reducir partículas en móvil
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        const particleCount = isMobile ? 30 : 80; // Menos partículas en móvil
+
         const particles = [];
-        const particleCount = 80;
 
         class Particle {
             constructor() {
@@ -862,14 +919,15 @@
         }
 
         function connectParticles() {
+            const connectDistance = isMobile ? 80 : 120; // Conectar más cerca en móvil
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    if (distance < 120) {
-                        ctx.strokeStyle = `rgba(30, 144, 255, ${0.2 * (1 - distance / 120)})`;
+                    if (distance < connectDistance) {
+                        ctx.strokeStyle = `rgba(30, 144, 255, ${0.15 * (1 - distance / connectDistance)})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
@@ -880,24 +938,33 @@
             }
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
+        init();
 
-            connectParticles();
+        // Throttling de frames para móvil (30fps)
+        let lastFrame = 0;
+        const fpsLimit = isMobile ? 30 : 60;
+        const frameInterval = 1000 / fpsLimit;
+
+        function animate(timestamp) {
+            if (timestamp - lastFrame >= frameInterval) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+
+                connectParticles();
+                lastFrame = timestamp;
+            }
             requestAnimationFrame(animate);
         }
 
-        init();
-        animate();
+        requestAnimationFrame(animate);
 
         const card = document.getElementById('card');
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
         
+        // Desactivar efecto 3D por mouse en móvil
         if (!isMobile) {
             document.addEventListener('mousemove', (e) => {
                 const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
@@ -914,6 +981,7 @@
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            // Reajustar partículas si es necesario (opcional)
         });
 
         const qrBtn = document.getElementById('qr-btn');
