@@ -105,7 +105,12 @@
             will-change: transform, box-shadow; /* Preparar para animaciones */
         }
 
-        /* Pseudo-elemento para el blur (más eficiente que backdrop-filter) */
+        /* Glassmorphism real con backdrop-filter */
+        .card {
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
         .card::after {
             content: '';
             position: absolute;
@@ -113,8 +118,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(10, 15, 30, 0.85);
-            filter: blur(10px);
+            background: rgba(10, 15, 30, 0.75);
             border-radius: 30px;
             z-index: -1;
             border: 1px solid rgba(30, 144, 255, 0.3);
@@ -220,7 +224,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 6px;
-            text-shadow: 0 0 30px rgba(30, 144, 255, 0.5);
+            filter: drop-shadow(0 0 12px rgba(30, 144, 255, 0.6));
             letter-spacing: 1px;
             animation: titleGlow 3s ease-in-out infinite;
             line-height: 1.2;
@@ -859,6 +863,18 @@
 </script>
 </head>
 <body>
+  <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px);">
+    <div style="background: rgba(20, 25, 40, 0.95); padding: 40px; border-radius: 25px; border: 1px solid rgba(30, 144, 255, 0.4); box-shadow: 0 0 80px rgba(30, 144, 255, 0.6); text-align: center; max-width: 400px; margin: 20px;">
+        <h2 style="color: #1e90ff; font-family: 'Orbitron', sans-serif; font-size: 24px; margin-bottom: 20px;">Vista previa terminada</h2>
+        <p style="color: rgba(255, 255, 255, 0.9); font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+            Esta era una <strong style="color: #00d4ff;">demostración privada</strong> de la tarjeta digital para <strong>Emisora Ebenezer Stereo</strong>.
+        </p>
+        <p style="color: rgba(255, 255, 255, 0.7); font-size: 14px; line-height: 1.5; margin-bottom: 25px;">
+            Para activar la versión completa con todos los enlaces funcionales y personalizados, comunícate con el desarrollador. Recibirás un diseño exclusivo, optimizado para móviles y adaptado a la identidad de la emisora.
+        </p>
+        <a href="https://wa.me/+573004910033?text=Hola,%20me%20interesa%20activar%20la%20tarjeta%20digital%20para%20Emisora%20Ebenezer%20Stereo" style="display: inline-block; padding: 15px 30px; background: rgba(30, 144, 255, 0.9); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">Solicitar activación</a>
+    </div>
+</div>
     <canvas id="particles-canvas"></canvas>
     
     <div class="grid-background"></div>
@@ -920,7 +936,7 @@
                     Página Web
                 </a>
 
-                <a href="mailto:emisoraebenezerstereo@gmail.com" class="button btn-email">
+                <a href="/cdn-cgi/l/email-protection#1471797d677b66757176717a716e716667607166717b547379757d783a777b79" class="button btn-email">
                     <svg class="button-icon" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                     </svg>
@@ -948,7 +964,7 @@
                     Ver QR
                 </a>
             </div>
-                <!-- AGREGAR ESTOS BOTONES DE REDES SOCIALES AQUÍ -->
+                <!-- REDES SOCIALES -->
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <a href="https://www.facebook.com/profile.php?id=61565825936042" target="_blank" class="button btn-facebook" style="flex: 1;">
                         <svg class="button-icon" fill="currentColor" viewBox="0 0 24 24">
@@ -977,7 +993,7 @@
             <div class="info-content">
                 <p>Ebenezer Stereo se enorgullece de ser una de las <span class="highlight">150 emisoras ganadoras</span> de la convocatoria <span class="highlight">Territorios al Aire 2025</span> del Ministerio de las TIC's.</p>
                 
-                <img src="150Emisoras.jpg" alt="Territorios al Aire 2025" style="width: 100%; max-width: 100%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 5px 20px rgba(30, 144, 255, 0.3);">
+                <img src="150Emisoras.jpg" alt="Territorios al Aire 2025" loading="lazy" decoding="async" style="width: 100%; max-width: 100%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 5px 20px rgba(30, 144, 255, 0.3);">
                 
                 <p>Llevamos el poder de la palabra a través de la frecuencia <span class="highlight">88.2 FM</span> y nuestra plataforma digital.</p>
 
@@ -1004,10 +1020,11 @@
             </div>
             <div class="map-container">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3935.7267898765436!2d-73.17281908478614!3d10.386805692615698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDIzJzEyLjUiTiA3M8KwMTAnMTQuMiJX!5e0!3m2!1ses!2sco!4v1234567890123!5m2!1ses!2sco"
+                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3935.7267898765436!2d-73.17281908478614!3d10.386805692615698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTDCsDIzJzEyLjUiTiA3M8KwMTAnMTQuMiJX!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco"
                     allowfullscreen="" 
                     loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade">
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Ubicación Emisora Ebenezer Stereo">
                 </iframe>
                 <a href="https://maps.google.com/?q=10.386806,-73.170611" class="map-overlay-btn">
                     Abrir en Google Maps
@@ -1028,7 +1045,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         
@@ -1191,3 +1208,4 @@
     </script>
 </body>
 </html>
+       
